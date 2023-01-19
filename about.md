@@ -7,3 +7,4 @@ I am a data science graduate student at the School of Informatics and Computing 
 I am also an Amazon Alexa Skills developer with experience in VUI (Voice User Interfaces). 
 I've previously worked at [Stylumia Intelligence](https://www.stylumia.ai/), [ZS Associates](https://www.zs.com/), [American Express](https://www.americanexpress.com/in/) and [EdCaptain](https://edcaptain.com/), A Stealth Mode Startup.
 You can find me on [Linkedin](https://www.linkedin.com/in/sakshamio/), [Twitter](https://twitter.com/sakshami_o), or [Email Me](mailto:gupta.saksham98@gmail.com).
+Download my resume [here](https://raw.githubusercontent.com/sakshamio/thinkspace/gh-pages/assets/Resume_4th_January_2023.pdf).
