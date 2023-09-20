@@ -4,8 +4,6 @@ title: Resume
 permalink: /resume/
 ---
 
-# **Resume**
-
 ---
 
 ## **Contact Information**
