@@ -10,7 +10,7 @@ permalink: /resume/
 
 ## **Contact Information**
 
-- **Email**: your.email@example.com
+- **Email**: [gupta.saksham98@gmail.com](mailto:gupta.saksham98@gmail.com)
 - **LinkedIn**: [https://www.linkedin.com/in/sakshamio/](https://www.linkedin.com/in/sakshamio/)
 - **GitHub**: [https://github.com/sakshamio](https://github.com/sakshamio)
 
@@ -29,9 +29,11 @@ I am a passionate data scientist with experience in...
 ---
 
 ## **Work Experience**
+
 ### **Company A (Software Engineer) - 2019 to Present**
 - Implemented feature X, resulting in Y.
 - Worked on Z.
+  
 ### **Company B (Junior Developer) - 2017 to 2019**
 - Did X.
 - Improved Y.
