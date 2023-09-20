@@ -3,21 +3,31 @@ layout: page
 title: Resume
 permalink: /resume/
 ---
+
 # **Resume**
+
 ---
+
 ## **Contact Information**
+
 - **Email**: your.email@example.com
-- **LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/your-profile)
-- **GitHub**: [Your GitHub Profile](https://github.com/your-profile)
+- **LinkedIn**: [https://www.linkedin.com/in/sakshamio/](https://www.linkedin.com/in/sakshamio/)
+- **GitHub**: [https://github.com/sakshamio](https://github.com/sakshamio)
+
 ---
+
 ## **Objective**
-I am a passionate developer with experience in...
+I am a passionate data scientist with experience in...
+
 ---
+
 ## **Skills**
 - **Programming Languages**: Python, JavaScript, C++
 - **Frameworks**: React, Django
 - **Tools**: Git, Docker
+
 ---
+
 ## **Work Experience**
 ### **Company A (Software Engineer) - 2019 to Present**
 - Implemented feature X, resulting in Y.
@@ -25,7 +35,9 @@ I am a passionate developer with experience in...
 ### **Company B (Junior Developer) - 2017 to 2019**
 - Did X.
 - Improved Y.
+
 ---
+
 ## **Education**
 ### **University A - B.S. in Computer Science**
 - **Year**: 2013 to 2017
@@ -33,19 +45,27 @@ I am a passionate developer with experience in...
 ### **High School A**
 - **Year**: 2009 to 2013
 - **Achievements**: Honor Roll
+
 ---
+
 ## **Projects**
 - **Project A**: Description here. [GitHub](https://github.com/your-profile/project-a)
 - **Project B**: Description here. [Demo](#)
+
 ---
+
 ## **Certifications**
 - Certification A
 - Certification B
+
 ---
+
 ## **Languages**
 - English (Native)
 - Spanish (Conversational)
+
 ---
+
 ## **References**
 Available upon request.
 
