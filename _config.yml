@@ -1,8 +1,8 @@
 # Site settings
-title_left    : "Think"
-title_right   : "space"
-description   : "Computer stuff"
-keywords      : "Jekyll, theme, free, download, SEO, blog, web, minimalist, thinkspace"
+title_left    : "Embedding"
+title_right   : "One"
+description   : "A day in latent space"
+keywords      : "Embedding, Model, ML, Deep Learning, Generative, AI, Latent space, BERT, Transformers, Encoders"
 url           : https://sakshamio.github.io/ # site url
 baseurl       : "/thinkspace" # apply repo name like "/myproject" if used under gh-pages branch, else (under master branch) just leave empty/blank
 cover         : "" # image uri like logo/cover image for site seo
