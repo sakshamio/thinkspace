@@ -24,7 +24,7 @@ by upgrading your account.
 which is another expense saved. If you already have a domain name, you can easily link that too. It's also pretty well documented, so if you run into any problems, you can easily google them.
 
 ### Why Jekyll?
-Jekyll is a static site generator which allows you to generate and set up a website around your content _very_ easily. I used [Jekyll Themes](http://jekyllthemes.org/), which has pre built themes for you to
+Jekyll is a static site generator which allows you to generate and set up a website around your content _very_ easily. I used [Jekyll Themes](https://jekyllthemes.org/), which has pre built themes for you to
 use, which makes your work even easier. A post update is just a `git push` away.
 
 ### Putting it online
