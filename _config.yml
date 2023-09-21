@@ -3,8 +3,8 @@ title_left    : "Embedding"
 title_right   : "One"
 description   : "A day in latent space"
 keywords      : "Embedding, Model, ML, Deep Learning, Generative, AI, Latent space, BERT, Transformers, Encoders"
-url           : https://sakshamio.github.io/ # site url
-baseurl       : "/thinkspace" # apply repo name like "/myproject" if used under gh-pages branch, else (under master branch) just leave empty/blank
+url           : https://embedding.one/ #https://sakshamio.github.io/ # site url
+baseurl       : "" #"/thinkspace" # apply repo name like "/myproject" if used under gh-pages branch, else (under master branch) just leave empty/blank
 cover         : "" # image uri like logo/cover image for site seo
 
 google_analytics  : UA-140820584-1
