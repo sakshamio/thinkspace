@@ -16,18 +16,32 @@ document.addEventListener('DOMContentLoaded', function() {
       filterButtons.forEach(btn => btn.classList.remove('active'));
       this.classList.add('active');
 
+      let visiblePosts = 0;
+
       // Filter posts
       postItems.forEach(item => {
         const itemTags = item.getAttribute('data-tags');
         console.log('Post item:', item);
         console.log('Post tags:', itemTags);
         
-        if (tag === 'all' || (itemTags && itemTags.includes(tag))) {
+        if (tag === 'all') {
           item.style.display = '';
+          visiblePosts++;
+        } else if (itemTags) {
+          const tagArray = itemTags.split(' ');
+          console.log('Tag array:', tagArray);
+          if (tagArray.includes(tag)) {
+            item.style.display = '';
+            visiblePosts++;
+          } else {
+            item.style.display = 'none';
+          }
         } else {
           item.style.display = 'none';
         }
       });
+
+      console.log('Visible posts:', visiblePosts);
     });
   });
 });
