@@ -346,3 +346,17 @@ hr {
   }
 }
 
+.post-post-tags {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.post-post-tags .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 5px;
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: #333;
+}
