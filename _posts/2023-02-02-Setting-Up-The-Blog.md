@@ -4,6 +4,7 @@ title: "Setting up the blog"
 description: "Setting up a jekyll blog on github pages"
 comments: true
 keywords: "dummy content, lorem ipsum"
+tags: [web-development, github-pages, jekyll, blogging]
 ---
 
 Nowadays, If I want to set up a blog, I have an immense number of options, all of which have different trade-offs in terms of `cost`, `ease of use`, etc. In the following post, I'll try
