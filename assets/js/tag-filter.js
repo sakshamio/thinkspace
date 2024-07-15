@@ -9,9 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   filterButtons.forEach(button => {
     button.addEventListener('click', function() {
-      console.log('Button clicked:', this.getAttribute('data-tag'));
-      
       const tag = this.getAttribute('data-tag');
+      console.log('Button clicked:', tag);
       
       // Update active button
       filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -20,9 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // Filter posts
       postItems.forEach(item => {
         const itemTags = item.getAttribute('data-tags');
+        console.log('Post item:', item);
         console.log('Post tags:', itemTags);
         
-        if (tag === 'all' || itemTags.includes(tag)) {
+        if (tag === 'all' || (itemTags && itemTags.includes(tag))) {
           item.style.display = '';
         } else {
           item.style.display = 'none';
