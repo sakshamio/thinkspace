@@ -144,7 +144,7 @@ hr {
 
   .article-title {
     display: inline-block;
-    width: 85%;
+    width: 75%;
     //border-bottom: 1px dashed lighten($light-gray-color, 10%);
   }
 
@@ -265,6 +265,14 @@ hr {
 
 // This applies from 0px to 600px
 @media (max-width: 600px) {
+  .tag-filter {
+    text-align: left;
+  }
+
+  .post-tags {
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+  }
   .date-label {
     float: left !important;
     border: 0 !important;
@@ -292,3 +300,49 @@ hr {
     }
   }
 }
+
+.tag-filter {
+  margin-bottom: $base-spacing;
+  text-align: center;
+
+  h3 {
+    margin-bottom: 0.5em;
+  }
+}
+
+.tag-btn {
+  display: inline-block;
+  margin: 0.3em;
+  padding: 0.3em 0.8em;
+  border: 1px solid $light-gray-color;
+  background-color: lighten($light-gray-color, 15%);
+  color: $dark-gray-color;
+  font-size: rem(14);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $light-gray-color;
+  }
+
+  &.active {
+    background-color: $blue-color;
+    color: white;
+    border-color: $blue-color;
+  }
+}
+
+.post-tags {
+  margin-top: 0.5em;
+  
+  .tag {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    margin-right: 0.5em;
+    background-color: lighten($light-gray-color, 10%);
+    color: $dark-gray-color;
+    font-size: rem(12);
+    border-radius: 3px;
+  }
+}
+
