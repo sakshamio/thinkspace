@@ -4,6 +4,7 @@ title: "Correlation != Causation"
 comments: true
 description: "Just Because two events have a correlation, does not imply there's a causation"
 keywords: "dummy content"
+tags: [statistics, data]
 ---
 Before I start this post, a quick introduction to Correlation for those of you who skipped Stats 101.
 
