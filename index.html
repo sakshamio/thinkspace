@@ -27,7 +27,7 @@ title: Home
           <h2 class="category-title">{{ post.date | date: '%Y' }}</h2>
         {% endif %}
       {% endunless %}
-      <article class="post-item">
+      <article class="post-item" data-tags="{% for tag in post.tags %}{{ tag | downcase }} {% endfor %}">
         <span class="post-meta date-label">{{ post.date | date: "%b %d" }}</span>
         <div class="article-title"><a class="post-link" href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">{{ post.title }}</a></div>
         <div class="post-tags">
