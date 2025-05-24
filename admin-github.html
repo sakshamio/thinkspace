@@ -315,14 +315,9 @@ exclude_from_nav: true
             <h2>GitHub Pages Admin</h2>
             <p>Use your GitHub Personal Access Token to manage blog posts</p>
             
-            <div class="form-group">
-                <label for="repoOwner">Repository Owner:</label>
-                <input type="text" id="repoOwner" placeholder="your-username" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="repoName">Repository Name:</label>
-                <input type="text" id="repoName" placeholder="your-repo-name" required>
+            <div class="info-box" style="margin-bottom: 2rem;">
+                <h3>Repository: sakshamio/thinkspace</h3>
+                <p>Pre-configured for this blog. Just enter your GitHub token below.</p>
             </div>
             
             <div class="form-group">
@@ -346,8 +341,13 @@ exclude_from_nav: true
                 <p><strong>If nothing happens when you click Connect:</strong><br>
                 1. Open browser Developer Tools (F12)<br>
                 2. Go to Console tab<br>
-                3. Look for error messages<br>
-                4. Common issues: CORS errors, invalid token, wrong repo name</p>
+                3. Check "Preserve log" checkbox to keep logs<br>
+                4. Look for error messages with 🔍 🌐 📡 ❌ emojis<br>
+                5. Common issues: CORS errors, invalid token, network problems</p>
+            </div>
+            
+            <div id="debugOutput" style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto; display: none;">
+                <strong>Debug Log:</strong><br>
             </div>
         </form>
     </div>
@@ -421,13 +421,31 @@ exclude_from_nav: true
     </div>
 
     <script>
-        // Configuration
+        // Configuration - Hardcoded for this repository
         let githubToken = '';
-        let repoOwner = '';
-        let repoName = '';
+        const repoOwner = 'sakshamio';  // Change this to your GitHub username
+        const repoName = 'thinkspace';   // Change this to your repository name
         let quill;
         let currentPosts = [];
         let editingPost = null;
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            console.log(message, data || '');
+            
+            const debugOutput = document.getElementById('debugOutput');
+            if (debugOutput) {
+                debugOutput.style.display = 'block';
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = document.createElement('div');
+                logEntry.innerHTML = `[${timestamp}] ${message}`;
+                if (data) {
+                    logEntry.innerHTML += `<br>&nbsp;&nbsp;${JSON.stringify(data, null, 2)}`;
+                }
+                debugOutput.appendChild(logEntry);
+                debugOutput.scrollTop = debugOutput.scrollHeight;
+            }
+        }
 
         // Initialize Quill editor
         function initEditor() {
@@ -466,8 +484,8 @@ exclude_from_nav: true
                 }
             };
             
-            console.log('🌐 Making GitHub API request:', url);
-            console.log('📋 Request options:', {
+            debugLog('🌐 Making GitHub API request: ' + url);
+            debugLog('📋 Request options:', {
                 method: options.method || 'GET',
                 headers: {
                     ...defaultOptions.headers,
@@ -482,17 +500,17 @@ exclude_from_nav: true
                     headers: { ...defaultOptions.headers, ...options.headers }
                 });
                 
-                console.log('📡 Response status:', response.status, response.statusText);
-                console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+                debugLog(`📡 Response status: ${response.status} ${response.statusText}`);
+                debugLog('📡 Response headers:', Object.fromEntries(response.headers.entries()));
                 
                 if (!response.ok) {
                     let errorData;
                     try {
                         errorData = await response.json();
-                        console.error('❌ GitHub API Error Response:', errorData);
+                        debugLog('❌ GitHub API Error Response:', errorData);
                     } catch (parseError) {
                         errorData = { message: response.statusText };
-                        console.error('❌ Failed to parse error response:', parseError);
+                        debugLog('❌ Failed to parse error response:', parseError.message);
                     }
                     
                     const errorMessage = errorData.message || `HTTP ${response.status}: ${response.statusText}`;
@@ -500,11 +518,11 @@ exclude_from_nav: true
                 }
                 
                 const data = await response.json();
-                console.log('✅ GitHub API Success:', data);
+                debugLog('✅ GitHub API Success - received data with keys:', Object.keys(data));
                 return data;
                 
             } catch (fetchError) {
-                console.error('❌ Network/Fetch Error:', fetchError);
+                debugLog('❌ Network/Fetch Error:', fetchError.message);
                 if (fetchError.name === 'TypeError' && fetchError.message.includes('Failed to fetch')) {
                     throw new Error('Network error - check your internet connection and CORS settings');
                 }
@@ -520,13 +538,11 @@ exclude_from_nav: true
             document.getElementById('loginError').textContent = '';
             document.getElementById('loginSuccess').textContent = '';
             
-            repoOwner = document.getElementById('repoOwner').value.trim();
-            repoName = document.getElementById('repoName').value.trim();
             githubToken = document.getElementById('githubToken').value.trim();
             
             // Validation
-            if (!repoOwner || !repoName || !githubToken) {
-                document.getElementById('loginError').textContent = 'Please fill in all fields';
+            if (!githubToken) {
+                document.getElementById('loginError').textContent = 'Please enter your GitHub token';
                 return;
             }
             
@@ -536,17 +552,17 @@ exclude_from_nav: true
             loginBtn.textContent = 'Connecting...';
             loginBtn.disabled = true;
             
-            console.log('🔍 Starting connection test...');
-            console.log('Repository:', `${repoOwner}/${repoName}`);
-            console.log('Token length:', githubToken.length);
-            console.log('Token starts with:', githubToken.substring(0, 4) + '...');
+            debugLog('🔍 Starting connection test...');
+            debugLog(`Repository: ${repoOwner}/${repoName}`);
+            debugLog(`Token length: ${githubToken.length}`);
+            debugLog(`Token starts with: ${githubToken.substring(0, 4)}...`);
             
             try {
                 // Test GitHub connection by fetching repository info
-                console.log('📡 Testing GitHub API connection...');
+                debugLog('📡 Testing GitHub API connection...');
                 const repo = await githubAPI('');
-                console.log('✅ Repository found:', repo.name);
-                console.log('📊 Repository details:', {
+                debugLog('✅ Repository found:', repo.name);
+                debugLog('📊 Repository details:', {
                     name: repo.name,
                     owner: repo.owner.login,
                     private: repo.private,
@@ -554,12 +570,12 @@ exclude_from_nav: true
                 });
                 
                 // Test if we can access the _posts directory
-                console.log('📁 Testing _posts directory access...');
+                debugLog('📁 Testing _posts directory access...');
                 try {
                     const postsDir = await githubAPI('/contents/_posts');
-                    console.log('✅ _posts directory accessible, found', postsDir.length, 'items');
+                    debugLog(`✅ _posts directory accessible, found ${postsDir.length} items`);
                 } catch (postsError) {
-                    console.log('⚠️ _posts directory not found or not accessible:', postsError.message);
+                    debugLog('⚠️ _posts directory not found or not accessible:', postsError.message);
                     if (postsError.message.includes('404')) {
                         document.getElementById('loginError').textContent = 'Warning: _posts directory not found. You can still proceed, but create the _posts directory first.';
                     }
@@ -571,8 +587,6 @@ exclude_from_nav: true
                 
                 // Store credentials in session storage
                 sessionStorage.setItem('adminLoggedIn', 'true');
-                sessionStorage.setItem('repoOwner', repoOwner);
-                sessionStorage.setItem('repoName', repoName);
                 sessionStorage.setItem('githubToken', btoa(githubToken)); // Base64 encode
                 
                 initEditor();
@@ -580,12 +594,11 @@ exclude_from_nav: true
                 setCurrentDate();
                 
                 document.getElementById('loginSuccess').textContent = 'Connected successfully!';
-                console.log('🎉 Login successful!');
+                debugLog('🎉 Login successful!');
                 
             } catch (error) {
-                console.error('❌ Login error details:', error);
-                console.error('Error message:', error.message);
-                console.error('Full error object:', error);
+                debugLog('❌ Login error details:', error.message);
+                debugLog('Full error object:', error);
                 
                 let errorMessage = 'Connection failed: ';
                 
@@ -612,20 +625,14 @@ exclude_from_nav: true
         // Logout function
         function logout() {
             sessionStorage.removeItem('adminLoggedIn');
-            sessionStorage.removeItem('repoOwner');
-            sessionStorage.removeItem('repoName');
             sessionStorage.removeItem('githubToken');
             
             githubToken = '';
-            repoOwner = '';
-            repoName = '';
             
             document.getElementById('loginContainer').style.display = 'flex';
             document.getElementById('adminContainer').style.display = 'none';
             
             // Clear form
-            document.getElementById('repoOwner').value = '';
-            document.getElementById('repoName').value = '';
             document.getElementById('githubToken').value = '';
             document.getElementById('loginError').textContent = '';
             document.getElementById('loginSuccess').textContent = '';
@@ -634,14 +641,10 @@ exclude_from_nav: true
         // Check if already logged in
         async function checkAuth() {
             const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
-            const storedOwner = sessionStorage.getItem('repoOwner');
-            const storedRepo = sessionStorage.getItem('repoName');
             const storedToken = sessionStorage.getItem('githubToken');
             
-            if (isLoggedIn === 'true' && storedOwner && storedRepo && storedToken) {
+            if (isLoggedIn === 'true' && storedToken) {
                 try {
-                    repoOwner = storedOwner;
-                    repoName = storedRepo;
                     githubToken = atob(storedToken);
                     
                     // Test if credentials still work
