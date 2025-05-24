@@ -340,6 +340,15 @@ exclude_from_nav: true
                 2. Generate new token with 'repo' permissions<br>
                 3. Copy the token and paste it above</p>
             </div>
+            
+            <div class="info-box" style="margin-top: 1rem; background: #fff3cd; border-color: #ffeaa7;">
+                <h3>Debugging Tips:</h3>
+                <p><strong>If nothing happens when you click Connect:</strong><br>
+                1. Open browser Developer Tools (F12)<br>
+                2. Go to Console tab<br>
+                3. Look for error messages<br>
+                4. Common issues: CORS errors, invalid token, wrong repo name</p>
+            </div>
         </form>
     </div>
 
@@ -457,37 +466,110 @@ exclude_from_nav: true
                 }
             };
             
-            const response = await fetch(url, {
-                ...defaultOptions,
-                ...options,
-                headers: { ...defaultOptions.headers, ...options.headers }
+            console.log('🌐 Making GitHub API request:', url);
+            console.log('📋 Request options:', {
+                method: options.method || 'GET',
+                headers: {
+                    ...defaultOptions.headers,
+                    'Authorization': `token ${githubToken.substring(0, 8)}...` // Log partial token for debugging
+                }
             });
             
-            if (!response.ok) {
-                const error = await response.json().catch(() => ({ message: response.statusText }));
-                throw new Error(error.message || 'GitHub API request failed');
+            try {
+                const response = await fetch(url, {
+                    ...defaultOptions,
+                    ...options,
+                    headers: { ...defaultOptions.headers, ...options.headers }
+                });
+                
+                console.log('📡 Response status:', response.status, response.statusText);
+                console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+                
+                if (!response.ok) {
+                    let errorData;
+                    try {
+                        errorData = await response.json();
+                        console.error('❌ GitHub API Error Response:', errorData);
+                    } catch (parseError) {
+                        errorData = { message: response.statusText };
+                        console.error('❌ Failed to parse error response:', parseError);
+                    }
+                    
+                    const errorMessage = errorData.message || `HTTP ${response.status}: ${response.statusText}`;
+                    throw new Error(errorMessage);
+                }
+                
+                const data = await response.json();
+                console.log('✅ GitHub API Success:', data);
+                return data;
+                
+            } catch (fetchError) {
+                console.error('❌ Network/Fetch Error:', fetchError);
+                if (fetchError.name === 'TypeError' && fetchError.message.includes('Failed to fetch')) {
+                    throw new Error('Network error - check your internet connection and CORS settings');
+                }
+                throw fetchError;
             }
-            
-            return response.json();
         }
 
         // Login function
         async function login(event) {
             event.preventDefault();
             
+            // Clear previous messages
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('loginSuccess').textContent = '';
+            
             repoOwner = document.getElementById('repoOwner').value.trim();
             repoName = document.getElementById('repoName').value.trim();
             githubToken = document.getElementById('githubToken').value.trim();
             
+            // Validation
+            if (!repoOwner || !repoName || !githubToken) {
+                document.getElementById('loginError').textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            // Show loading state
+            const loginBtn = event.target.querySelector('button[type="submit"]') || event.target;
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Connecting...';
+            loginBtn.disabled = true;
+            
+            console.log('🔍 Starting connection test...');
+            console.log('Repository:', `${repoOwner}/${repoName}`);
+            console.log('Token length:', githubToken.length);
+            console.log('Token starts with:', githubToken.substring(0, 4) + '...');
+            
             try {
                 // Test GitHub connection by fetching repository info
+                console.log('📡 Testing GitHub API connection...');
                 const repo = await githubAPI('');
+                console.log('✅ Repository found:', repo.name);
+                console.log('📊 Repository details:', {
+                    name: repo.name,
+                    owner: repo.owner.login,
+                    private: repo.private,
+                    permissions: repo.permissions
+                });
+                
+                // Test if we can access the _posts directory
+                console.log('📁 Testing _posts directory access...');
+                try {
+                    const postsDir = await githubAPI('/contents/_posts');
+                    console.log('✅ _posts directory accessible, found', postsDir.length, 'items');
+                } catch (postsError) {
+                    console.log('⚠️ _posts directory not found or not accessible:', postsError.message);
+                    if (postsError.message.includes('404')) {
+                        document.getElementById('loginError').textContent = 'Warning: _posts directory not found. You can still proceed, but create the _posts directory first.';
+                    }
+                }
                 
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('adminContainer').style.display = 'block';
                 document.getElementById('repoInfo').textContent = `${repoOwner}/${repoName}`;
                 
-                // Store credentials in session storage (not secure, but functional for GitHub Pages)
+                // Store credentials in session storage
                 sessionStorage.setItem('adminLoggedIn', 'true');
                 sessionStorage.setItem('repoOwner', repoOwner);
                 sessionStorage.setItem('repoName', repoName);
@@ -498,13 +580,32 @@ exclude_from_nav: true
                 setCurrentDate();
                 
                 document.getElementById('loginSuccess').textContent = 'Connected successfully!';
-                setTimeout(() => {
-                    document.getElementById('loginSuccess').textContent = '';
-                }, 3000);
+                console.log('🎉 Login successful!');
                 
             } catch (error) {
-                document.getElementById('loginError').textContent = `Connection failed: ${error.message}`;
-                console.error('Login error:', error);
+                console.error('❌ Login error details:', error);
+                console.error('Error message:', error.message);
+                console.error('Full error object:', error);
+                
+                let errorMessage = 'Connection failed: ';
+                
+                if (error.message.includes('401')) {
+                    errorMessage += 'Invalid GitHub token or insufficient permissions';
+                } else if (error.message.includes('404')) {
+                    errorMessage += 'Repository not found or no access';
+                } else if (error.message.includes('403')) {
+                    errorMessage += 'Access forbidden - check token permissions';
+                } else if (error.message.includes('Network')) {
+                    errorMessage += 'Network error - check your internet connection';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                document.getElementById('loginError').textContent = errorMessage;
+            } finally {
+                // Restore button state
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
             }
         }
 
