@@ -3,6 +3,10 @@ _site/
 .bundle/
 Gemfile.lock
 
+# Admin dashboard
+.env
+node_modules/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
