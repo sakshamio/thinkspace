@@ -326,6 +326,7 @@ exclude_from_nav: true
             </div>
             
             <button type="button" class="login-btn" onclick="handleLogin(event)">Connect to GitHub</button>
+            <button type="button" onclick="testScript()" style="margin-top: 0.5rem; padding: 0.5rem; background: #95a5a6; color: white; border: none; border-radius: 4px; width: 100%;">Test JavaScript</button>
             <div id="loginError" class="error"></div>
             <div id="loginSuccess" class="success"></div>
             
@@ -421,6 +422,44 @@ exclude_from_nav: true
     </div>
 
     <script>
+        console.log('📄 Script tag starting to load...');
+        
+        // Define handleLogin immediately to ensure it's available
+        function handleLogin(event) {
+            console.log('🔥 Login button clicked - immediate function');
+            
+            // Clear previous debug log
+            const debugOutput = document.getElementById('debugOutput');
+            if (debugOutput) {
+                debugOutput.innerHTML = '<strong>Debug Log:</strong><br>';
+                debugOutput.style.display = 'block';
+            }
+            
+            try {
+                if (typeof login === 'function') {
+                    login(event);
+                } else {
+                    console.error('login function not found');
+                    alert('Error: login function not defined yet. Check console for details.');
+                }
+            } catch (error) {
+                console.error('Error in handleLogin:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        // Test function
+        function testScript() {
+            console.log('✅ JavaScript loaded successfully!');
+            alert('JavaScript is working! handleLogin is: ' + typeof handleLogin);
+        }
+        
+        // Make functions globally available immediately
+        window.handleLogin = handleLogin;
+        window.testScript = testScript;
+        
+        console.log('🎯 Functions defined and made global');
+        
         // Configuration - Hardcoded for this repository
         let githubToken = '';
         const repoOwner = 'sakshamio';  // Change this to your GitHub username
@@ -428,6 +467,8 @@ exclude_from_nav: true
         let quill;
         let currentPosts = [];
         let editingPost = null;
+        
+        console.log('🔧 Variables initialized...');
 
         // Debug logging function
         function debugLog(message, data = null) {
@@ -533,20 +574,7 @@ exclude_from_nav: true
             }
         }
 
-        // Handle login button click
-        function handleLogin(event) {
-            console.log('Button clicked!');
-            
-            // Clear previous debug log
-            const debugOutput = document.getElementById('debugOutput');
-            if (debugOutput) {
-                debugOutput.innerHTML = '<strong>Debug Log:</strong><br>';
-                debugOutput.style.display = 'block';
-            }
-            
-            debugLog('🔥 Login button clicked');
-            login(event);
-        }
+        console.log('🎯 About to define login function...');
 
         // Login function
         async function login(event) {
@@ -1009,10 +1037,21 @@ tags: [${tags.map(tag => `"${tag}"`).join(', ')}]
                 .replace(/$/, '</p>');
         }
 
+        // Test function to verify script is loaded
+        function testScript() {
+            console.log('✅ JavaScript loaded successfully!');
+            alert('JavaScript is working!');
+        }
+
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
             checkAuth();
         });
+
+        // Ensure functions are globally available
+        window.handleLogin = handleLogin;
+        window.testScript = testScript;
     </script>
 </body>
 </html>
