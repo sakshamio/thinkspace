@@ -1,0 +1,891 @@
+---
+layout: default
+title: GitHub Pages Admin
+permalink: /admin-github/
+exclude_from_nav: true
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Blog Admin</title>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .login-form p {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .success {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .admin-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+        
+        .editor-container {
+            margin: 1rem 0;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+        }
+        
+        .ql-editor {
+            min-height: 300px;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .posts-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .post-item {
+            padding: 1.5rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        
+        .post-item:hover {
+            border-color: #667eea;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-box h3 {
+            margin: 0 0 0.5rem 0;
+            color: #0c5460;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: #0c5460;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form class="login-form" onsubmit="login(event)">
+            <h2>GitHub Pages Admin</h2>
+            <p>Use your GitHub Personal Access Token to manage blog posts</p>
+            
+            <div class="form-group">
+                <label for="repoOwner">Repository Owner:</label>
+                <input type="text" id="repoOwner" placeholder="your-username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="repoName">Repository Name:</label>
+                <input type="text" id="repoName" placeholder="your-repo-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="githubToken">GitHub Personal Access Token:</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Connect to GitHub</button>
+            <div id="loginError" class="error"></div>
+            <div id="loginSuccess" class="success"></div>
+            
+            <div class="info-box" style="margin-top: 2rem;">
+                <h3>How to get a GitHub token:</h3>
+                <p>1. Go to GitHub → Settings → Developer settings → Personal access tokens<br>
+                2. Generate new token with 'repo' permissions<br>
+                3. Copy the token and paste it above</p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminContainer" class="admin-container">
+        <div class="header">
+            <h1>GitHub Pages Blog Admin</h1>
+            <div>
+                <span id="repoInfo" style="margin-right: 1rem; color: #7f8c8d;"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('posts')">Manage Posts</button>
+            <button class="nav-tab" onclick="showTab('new')">New Post</button>
+        </div>
+
+        <!-- Posts Management Tab -->
+        <div id="postsTab" class="tab-content">
+            <h2>Existing Posts</h2>
+            <div id="postsList" class="posts-grid">
+                <div class="loading">Loading posts...</div>
+            </div>
+        </div>
+
+        <!-- New Post Tab -->
+        <div id="newTab" class="tab-content" style="display: none;">
+            <h2 id="postFormTitle">Create New Post</h2>
+            <form id="postForm" onsubmit="savePost(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postTitle">Title:</label>
+                        <input type="text" id="postTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postDate">Date:</label>
+                        <input type="date" id="postDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="postDescription">Description:</label>
+                        <input type="text" id="postDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postKeywords">Keywords:</label>
+                        <input type="text" id="postKeywords" placeholder="keyword1, keyword2, keyword3">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postTags">Tags:</label>
+                    <input type="text" id="postTags" placeholder="tag1, tag2, tag3">
+                </div>
+                
+                <div class="form-group">
+                    <label>Content:</label>
+                    <div id="editor" class="editor-container"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <span id="saveButtonText">Save Post</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()" id="cancelBtn" style="display: none;">Cancel Edit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        let githubToken = '';
+        let repoOwner = '';
+        let repoName = '';
+        let quill;
+        let currentPosts = [];
+        let editingPost = null;
+
+        // Initialize Quill editor
+        function initEditor() {
+            if (quill) return; // Already initialized
+            
+            quill = new Quill('#editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+        }
+
+        // GitHub API helper
+        async function githubAPI(endpoint, options = {}) {
+            const url = `https://api.github.com/repos/${repoOwner}/${repoName}${endpoint}`;
+            const defaultOptions = {
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            const response = await fetch(url, {
+                ...defaultOptions,
+                ...options,
+                headers: { ...defaultOptions.headers, ...options.headers }
+            });
+            
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({ message: response.statusText }));
+                throw new Error(error.message || 'GitHub API request failed');
+            }
+            
+            return response.json();
+        }
+
+        // Login function
+        async function login(event) {
+            event.preventDefault();
+            
+            repoOwner = document.getElementById('repoOwner').value.trim();
+            repoName = document.getElementById('repoName').value.trim();
+            githubToken = document.getElementById('githubToken').value.trim();
+            
+            try {
+                // Test GitHub connection by fetching repository info
+                const repo = await githubAPI('');
+                
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContainer').style.display = 'block';
+                document.getElementById('repoInfo').textContent = `${repoOwner}/${repoName}`;
+                
+                // Store credentials in session storage (not secure, but functional for GitHub Pages)
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                sessionStorage.setItem('repoOwner', repoOwner);
+                sessionStorage.setItem('repoName', repoName);
+                sessionStorage.setItem('githubToken', btoa(githubToken)); // Base64 encode
+                
+                initEditor();
+                loadPosts();
+                setCurrentDate();
+                
+                document.getElementById('loginSuccess').textContent = 'Connected successfully!';
+                setTimeout(() => {
+                    document.getElementById('loginSuccess').textContent = '';
+                }, 3000);
+                
+            } catch (error) {
+                document.getElementById('loginError').textContent = `Connection failed: ${error.message}`;
+                console.error('Login error:', error);
+            }
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem('repoOwner');
+            sessionStorage.removeItem('repoName');
+            sessionStorage.removeItem('githubToken');
+            
+            githubToken = '';
+            repoOwner = '';
+            repoName = '';
+            
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('adminContainer').style.display = 'none';
+            
+            // Clear form
+            document.getElementById('repoOwner').value = '';
+            document.getElementById('repoName').value = '';
+            document.getElementById('githubToken').value = '';
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('loginSuccess').textContent = '';
+        }
+
+        // Check if already logged in
+        async function checkAuth() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            const storedOwner = sessionStorage.getItem('repoOwner');
+            const storedRepo = sessionStorage.getItem('repoName');
+            const storedToken = sessionStorage.getItem('githubToken');
+            
+            if (isLoggedIn === 'true' && storedOwner && storedRepo && storedToken) {
+                try {
+                    repoOwner = storedOwner;
+                    repoName = storedRepo;
+                    githubToken = atob(storedToken);
+                    
+                    // Test if credentials still work
+                    await githubAPI('');
+                    
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('adminContainer').style.display = 'block';
+                    document.getElementById('repoInfo').textContent = `${repoOwner}/${repoName}`;
+                    
+                    initEditor();
+                    loadPosts();
+                    setCurrentDate();
+                    
+                } catch (error) {
+                    // Authentication failed, show login
+                    logout();
+                }
+            }
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('postsTab').style.display = 'none';
+            document.getElementById('newTab').style.display = 'none';
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // Set current date
+        function setCurrentDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('postDate').value = today;
+        }
+
+        // Load existing posts from GitHub
+        async function loadPosts() {
+            try {
+                const contents = await githubAPI('/contents/_posts');
+                const posts = [];
+                
+                for (const file of contents) {
+                    if (file.name.endsWith('.md')) {
+                        try {
+                            const fileData = await githubAPI(`/contents/_posts/${file.name}`);
+                            const content = atob(fileData.content);
+                            const post = parsePost(content, file.name, fileData.sha);
+                            posts.push(post);
+                        } catch (error) {
+                            console.error(`Error loading post ${file.name}:`, error);
+                        }
+                    }
+                }
+                
+                // Sort by date, newest first
+                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                currentPosts = posts;
+                renderPosts();
+                
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                document.getElementById('postsList').innerHTML = `<div class="error">Failed to load posts: ${error.message}</div>`;
+            }
+        }
+
+        // Parse Jekyll post
+        function parsePost(content, filename, sha) {
+            const lines = content.split('\n');
+            const frontMatterEnd = lines.findIndex((line, index) => index > 0 && line.trim() === '---');
+            
+            if (frontMatterEnd === -1) {
+                throw new Error('Invalid post format');
+            }
+            
+            const frontMatter = lines.slice(1, frontMatterEnd).join('\n');
+            const postContent = lines.slice(frontMatterEnd + 1).join('\n').trim();
+            
+            // Parse YAML frontmatter (basic parsing)
+            const meta = {};
+            frontMatter.split('\n').forEach(line => {
+                const match = line.match(/^(\w+):\s*(.+)$/);
+                if (match) {
+                    let value = match[2].trim();
+                    if (value.startsWith('"') && value.endsWith('"')) {
+                        value = value.slice(1, -1);
+                    } else if (value.startsWith('[') && value.endsWith(']')) {
+                        value = value.slice(1, -1).split(',').map(tag => tag.trim().replace(/"/g, ''));
+                    }
+                    meta[match[1]] = value;
+                }
+            });
+            
+            return {
+                filename,
+                sha,
+                title: meta.title || filename,
+                date: meta.date || filename.substring(0, 10),
+                description: meta.description || '',
+                keywords: meta.keywords || '',
+                tags: meta.tags || [],
+                content: postContent,
+                frontMatter: meta
+            };
+        }
+
+        // Render posts list
+        function renderPosts() {
+            const postsList = document.getElementById('postsList');
+            
+            if (currentPosts.length === 0) {
+                postsList.innerHTML = '<div class="loading">No posts found</div>';
+                return;
+            }
+            
+            postsList.innerHTML = '';
+            
+            currentPosts.forEach((post, index) => {
+                const postItem = document.createElement('div');
+                postItem.className = 'post-item';
+                postItem.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p>${post.description}</p>
+                    <div>
+                        ${Array.isArray(post.tags) ? post.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : ''}
+                    </div>
+                    <div class="post-meta">
+                        <span>${post.date}</span>
+                        <div class="post-actions">
+                            <button class="btn btn-primary" onclick="editPost(${index})">Edit</button>
+                            <button class="btn btn-danger" onclick="deletePost(${index})">Delete</button>
+                        </div>
+                    </div>
+                `;
+                postsList.appendChild(postItem);
+            });
+        }
+
+        // Save post to GitHub
+        async function savePost(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('postTitle').value;
+            const date = document.getElementById('postDate').value;
+            const description = document.getElementById('postDescription').value;
+            const keywords = document.getElementById('postKeywords').value;
+            const tags = document.getElementById('postTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const content = quill.root.innerHTML;
+            
+            try {
+                document.getElementById('saveButtonText').textContent = 'Saving...';
+                
+                // Generate filename
+                const filename = editingPost !== null ? 
+                    currentPosts[editingPost].filename : 
+                    `${date}-${title.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}.md`;
+                
+                // Create Jekyll post content
+                const frontMatter = `---
+layout: post
+title: "${title}"
+comments: true
+description: "${description}"
+keywords: "${keywords}"
+tags: [${tags.map(tag => `"${tag}"`).join(', ')}]
+---
+
+`;
+                
+                const markdownContent = htmlToMarkdown(content);
+                const fullContent = frontMatter + markdownContent;
+                
+                // Prepare GitHub API request
+                const apiData = {
+                    message: editingPost !== null ? `Update post: ${title}` : `Add new post: ${title}`,
+                    content: btoa(unescape(encodeURIComponent(fullContent))),
+                    branch: 'gh-pages'
+                };
+                
+                // If editing, include the SHA
+                if (editingPost !== null) {
+                    apiData.sha = currentPosts[editingPost].sha;
+                }
+                
+                // Save to GitHub
+                await githubAPI(`/contents/_posts/${filename}`, {
+                    method: 'PUT',
+                    body: JSON.stringify(apiData)
+                });
+                
+                alert('Post saved successfully! Changes will be live shortly.');
+                clearForm();
+                await loadPosts();
+                showTab('posts');
+                
+            } catch (error) {
+                console.error('Error saving post:', error);
+                alert(`Failed to save post: ${error.message}`);
+            } finally {
+                document.getElementById('saveButtonText').textContent = 'Save Post';
+            }
+        }
+
+        // Edit post
+        function editPost(index) {
+            const post = currentPosts[index];
+            editingPost = index;
+            
+            document.getElementById('postTitle').value = post.title;
+            document.getElementById('postDate').value = post.date;
+            document.getElementById('postDescription').value = post.description;
+            document.getElementById('postKeywords').value = post.keywords || '';
+            document.getElementById('postTags').value = Array.isArray(post.tags) ? post.tags.join(', ') : '';
+            
+            // Set editor content
+            quill.root.innerHTML = markdownToHtml(post.content || '');
+            
+            // Update UI for editing
+            document.getElementById('postFormTitle').textContent = 'Edit Post';
+            document.getElementById('saveButtonText').textContent = 'Update Post';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+            
+            showTab('new');
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            clearForm();
+            showTab('posts');
+        }
+
+        // Delete post
+        async function deletePost(index) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                try {
+                    const post = currentPosts[index];
+                    
+                    await githubAPI(`/contents/_posts/${post.filename}`, {
+                        method: 'DELETE',
+                        body: JSON.stringify({
+                            message: `Delete post: ${post.title}`,
+                            sha: post.sha,
+                            branch: 'gh-pages'
+                        })
+                    });
+                    
+                    alert('Post deleted successfully!');
+                    await loadPosts();
+                    
+                } catch (error) {
+                    console.error('Error deleting post:', error);
+                    alert(`Failed to delete post: ${error.message}`);
+                }
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('postForm').reset();
+            if (quill) quill.setContents([]);
+            editingPost = null;
+            setCurrentDate();
+            
+            // Reset UI
+            document.getElementById('postFormTitle').textContent = 'Create New Post';
+            document.getElementById('saveButtonText').textContent = 'Save Post';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+
+        // Basic HTML to Markdown conversion
+        function htmlToMarkdown(html) {
+            if (!html) return '';
+            
+            return html
+                .replace(/<h([1-6])>/g, (match, level) => '#'.repeat(parseInt(level)) + ' ')
+                .replace(/<\/h[1-6]>/g, '\n\n')
+                .replace(/<strong>/g, '**')
+                .replace(/<\/strong>/g, '**')
+                .replace(/<b>/g, '**')
+                .replace(/<\/b>/g, '**')
+                .replace(/<em>/g, '_')
+                .replace(/<\/em>/g, '_')
+                .replace(/<i>/g, '_')
+                .replace(/<\/i>/g, '_')
+                .replace(/<p>/g, '')
+                .replace(/<\/p>/g, '\n\n')
+                .replace(/<br\s*\/?>/g, '\n')
+                .replace(/<ul>/g, '\n')
+                .replace(/<\/ul>/g, '\n')
+                .replace(/<ol>/g, '\n')
+                .replace(/<\/ol>/g, '\n')
+                .replace(/<li>/g, '- ')
+                .replace(/<\/li>/g, '\n')
+                .replace(/<blockquote>/g, '> ')
+                .replace(/<\/blockquote>/g, '\n\n')
+                .replace(/<code>/g, '`')
+                .replace(/<\/code>/g, '`')
+                .replace(/<pre><code>/g, '```\n')
+                .replace(/<\/code><\/pre>/g, '\n```\n')
+                .replace(/<img[^>]+src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>/g, '![$2]($1)')
+                .replace(/<img[^>]+src="([^"]+)"[^>]*>/g, '![]($1)')
+                .replace(/<a[^>]+href="([^"]+)"[^>]*>([^<]+)<\/a>/g, '[$2]($1)')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/\n\n\n+/g, '\n\n')
+                .trim();
+        }
+
+        // Basic Markdown to HTML conversion
+        function markdownToHtml(markdown) {
+            if (!markdown) return '';
+            
+            return markdown
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
+                .replace(/^##### (.+)$/gm, '<h5>$1</h5>')
+                .replace(/^###### (.+)$/gm, '<h6>$1</h6>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/_(.+?)_/g, '<em>$1</em>')
+                .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^/, '<p>')
+                .replace(/$/, '</p>');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

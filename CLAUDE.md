@@ -16,6 +16,13 @@ bundle exec jekyll build # Build static site to _site/
 ```
 
 ### Admin Dashboard
+
+**GitHub Pages Compatible (Recommended):**
+- Access at `/admin-github/` on your live site
+- Uses GitHub Personal Access Token for authentication
+- No server setup required, works directly with GitHub API
+
+**Local Development Version:**
 ```bash
 npm install             # Install Node.js dependencies for admin dashboard
 cp .env.example .env    # Set up environment variables (edit .env with your password)
@@ -50,13 +57,12 @@ bundle exec htmlproofer ./_site --disable-external  # Validate HTML output
 - Blog supports tagging system and post sharing functionality
 
 ### Admin Dashboard
-- Password-protected web interface at `/admin.html`
+- **GitHub Pages version** (`/admin-github/`): Client-side interface using GitHub API
+- **Local development version** (`/admin.html`): Node.js backend with file operations
 - Full WYSIWYG editor using Quill.js for rich text editing
-- Media upload and management system
-- Node.js backend (`admin-server.js`) for file operations
-- Environment-based authentication (`.env` file)
+- GitHub Personal Access Token authentication (GitHub Pages) or environment variables (local)
 - Automatic Jekyll frontmatter generation
-- Direct integration with `_posts/` directory and `assets/images/`
+- Direct integration with `_posts/` directory via GitHub API or local files
 
 ### Theme Details
 - Custom "thinkspace" theme (v2.5.0) with minimalist design
