@@ -311,7 +311,7 @@ exclude_from_nav: true
 <body>
     <!-- Login Form -->
     <div id="loginContainer" class="login-container">
-        <form class="login-form" onsubmit="login(event)">
+        <div class="login-form">
             <h2>GitHub Pages Admin</h2>
             <p>Use your GitHub Personal Access Token to manage blog posts</p>
             
@@ -322,10 +322,10 @@ exclude_from_nav: true
             
             <div class="form-group">
                 <label for="githubToken">GitHub Personal Access Token:</label>
-                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" required>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" required onkeypress="if(event.key==='Enter') handleLogin(event)">
             </div>
             
-            <button type="submit" class="login-btn">Connect to GitHub</button>
+            <button type="button" class="login-btn" onclick="handleLogin(event)">Connect to GitHub</button>
             <div id="loginError" class="error"></div>
             <div id="loginSuccess" class="success"></div>
             
@@ -349,7 +349,7 @@ exclude_from_nav: true
             <div id="debugOutput" style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto; display: none;">
                 <strong>Debug Log:</strong><br>
             </div>
-        </form>
+        </div>
     </div>
 
     <!-- Admin Dashboard -->
@@ -433,18 +433,21 @@ exclude_from_nav: true
         function debugLog(message, data = null) {
             console.log(message, data || '');
             
-            const debugOutput = document.getElementById('debugOutput');
-            if (debugOutput) {
-                debugOutput.style.display = 'block';
-                const timestamp = new Date().toLocaleTimeString();
-                const logEntry = document.createElement('div');
-                logEntry.innerHTML = `[${timestamp}] ${message}`;
-                if (data) {
-                    logEntry.innerHTML += `<br>&nbsp;&nbsp;${JSON.stringify(data, null, 2)}`;
+            // Wait a bit if DOM not ready
+            setTimeout(() => {
+                const debugOutput = document.getElementById('debugOutput');
+                if (debugOutput) {
+                    debugOutput.style.display = 'block';
+                    const timestamp = new Date().toLocaleTimeString();
+                    const logEntry = document.createElement('div');
+                    logEntry.innerHTML = `[${timestamp}] ${message}`;
+                    if (data) {
+                        logEntry.innerHTML += `<br>&nbsp;&nbsp;<pre style="margin:0; font-size:0.9em;">${JSON.stringify(data, null, 2)}</pre>`;
+                    }
+                    debugOutput.appendChild(logEntry);
+                    debugOutput.scrollTop = debugOutput.scrollHeight;
                 }
-                debugOutput.appendChild(logEntry);
-                debugOutput.scrollTop = debugOutput.scrollHeight;
-            }
+            }, 10);
         }
 
         // Initialize Quill editor
@@ -530,9 +533,27 @@ exclude_from_nav: true
             }
         }
 
+        // Handle login button click
+        function handleLogin(event) {
+            console.log('Button clicked!');
+            
+            // Clear previous debug log
+            const debugOutput = document.getElementById('debugOutput');
+            if (debugOutput) {
+                debugOutput.innerHTML = '<strong>Debug Log:</strong><br>';
+                debugOutput.style.display = 'block';
+            }
+            
+            debugLog('🔥 Login button clicked');
+            login(event);
+        }
+
         // Login function
         async function login(event) {
+            console.log('Login function called!'); // Immediate log
             event.preventDefault();
+            event.stopPropagation();
+            debugLog('🚀 Form submission intercepted, preventing page refresh');
             
             // Clear previous messages
             document.getElementById('loginError').textContent = '';
@@ -620,6 +641,8 @@ exclude_from_nav: true
                 loginBtn.textContent = originalText;
                 loginBtn.disabled = false;
             }
+            
+            return false; // Prevent form submission
         }
 
         // Logout function
